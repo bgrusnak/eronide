@@ -1,0 +1,18 @@
+# Feel free to use, reuse and abuse the code in this file.
+
+all: 
+	@./rebar compile src_dirs src
+
+build: install
+
+install: get-deps
+	@./rebar compile
+
+get-deps:
+	@./rebar get-deps
+
+clean:
+	@./rebar clean
+	rm -f erl_crash.dump
+
+dist-clean: clean

@@ -1,0 +1,26 @@
+TODO
+
+1. Download a project
+2. Fix a bug with unshown of project list after creation
+3. Settings window
+4. Cookies
+5. Create file from tree with filetypes
+6. Upload and unzip|untar project
+7. Restore a password by email
+8. Fill the project data from entered fields
+9. Add the default icon to the project from template
+
+X1. Add an auto install and uninstall filetypes and templates
+X2. Add afterload and beforesave triggers
+X3. Add rebar support for projects
+X4. Add sync like support for projects
+X5. Add svn/cvs/git ability
+
+Bugs 
+
+1. Fix erl mimetype in editor
+2. Add wait bar for websocket
+3. fix mimetypes for the static header in editor
+4. Fix correct mimetypes in getCodemirrorTheme in editor
+5. Avoid to create duplicate project
+

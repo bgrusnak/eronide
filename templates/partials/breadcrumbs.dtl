@@ -1,0 +1,19 @@
+ <ul class="breadcrumb" id="breadcrumbs">
+</ul>
+
+<script type="text/javascript">
+	function setBreadcrumbsFromPath(path)
+	{
+		var strs=path.split('/')
+		var before
+		var after
+		$('#breadcrumbs').empty();
+		for (var i=0; i<strs.length; i++)
+		{
+			before=(i<strs.length-1) ? '><a href="#">' : ' class="active">';
+			after=(i<strs.length-1) ? '</a> <span class="divider">/</span>' : '';
+			$('<li'+before+ strs[i]+after+'</li>').appendTo('#breadcrumbs');
+		}
+//		string.ex
+	} 
+</script>

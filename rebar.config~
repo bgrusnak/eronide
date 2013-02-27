@@ -1,0 +1,32 @@
+%%-*- mode: erlang -*-
+{deps, [
+	{lager, ".*",
+		{git, "git://github.com/basho/lager.git", "master"}}
+	,
+	{cowboy, ".*",
+		{git, "git://github.com/extend/cowboy.git", "0.6.1"}}
+	,{mimetypes, ".*",
+		{git, "git://github.com/spawngrid/mimetypes.git", "master"}}
+	,{gettext, ".*",
+		{git, "git://github.com/noss/erlang-gettext.git", "master"}}
+	,{erlydtl, ".*",
+		{git, "https://github.com/evanmiller/erlydtl.git", "master"}}
+	,{sync, ".*",
+		{git, "git://github.com/rustyio/sync.git", "master"}}
+	,{json, ".*",
+		{git, "git://github.com/hio/erlang-json.git", "master"}}
+	,{jsx, ".*",
+		{git, "git://github.com/talentdeficit/jsx.git", "master"}}
+]}.
+
+{erl_opts, [{parse_transform, lager_transform}]}.
+
+%% Options for the ErlyDTL compiler
+{erlydtl_opts, [
+	{doc_root, "templates"},
+	{out_dir, "ebin"},
+	{recursive, true},
+	{source_ext, ".dtl"},
+	{module_ext, "_dtl"}
+]}.
+

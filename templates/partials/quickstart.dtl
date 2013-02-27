@@ -1,0 +1,83 @@
+<div class="modal hide fade" id="quickstart">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"> </button>
+		<h3>Quick start</h3>
+	</div>
+	<div class="modal-body" >
+		<div class="accordion" id="quickstart_accordion">
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#quickstart_accordion" href="#quickstart_collapseOne">
+						My projects
+					</a>
+				</div>
+				<div id="quickstart_collapseOne" class="accordion-body collapse in">
+					<div class="accordion-inner" id="quickstart_my_projects">
+						<div>No projects here</div>
+					</div>
+				</div>
+			</div>
+			<div class="accordion-group">
+				<div class="accordion-heading">
+					<a class="accordion-toggle" data-toggle="collapse" data-parent="#quickstart_accordion" href="#quickstart_collapseTwo">
+						Create a new project...
+					</a>
+				</div>
+				<div id="quickstart_collapseTwo" class="accordion-body collapse">
+					<div class="accordion-inner">
+						<div id="quickstart_project_templates" class="listview-container grid-layout">
+							{% for ptemplate in ptemplates %}
+							<div class="mediumListIconTextItem">
+								<img src="/static/ptemplates/{{ptemplate.icon}}" class="mediumListIconTextItem-Image" />
+								<div class="mediumListIconTextItem-Detail">
+									<h4>{{ptemplate.name}}</h4>
+									<h6>{{ptemplate.description}}</h6>
+								</div>
+							</div>
+							{% empty %}
+							Sorry, there is no project templates!
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button id="quickstart_execute" class="btn" data-dismiss="modal" aria-hidden="true">Ok</button>
+	</div>
+</div>
+<script type="text/javascript">
+$("#quickstart_execute").on("click", function(event){
+	if (currentProject!=undefined)
+	{
+		ws.send($.toJSON({"projects":{"do":"load", "data":currentProject}}));
+	} else {
+		createProject(currentTemplate)
+	}
+});
+currentTemplate=undefined;
+currentProject=undefined;
+$('#quickstart_project_templates').on('click', '.mediumListIconTextItem', function(e){
+	e.preventDefault();
+	$('div.mediumListIconTextItem:not(this)').removeClass('selected');
+	currentProject=undefined;
+	$(this).addClass('selected');
+	currentTemplate=$(this).children('div').children('h4').text();
+});
+$('#quickstart_my_projects').on('click', '.mediumListIconTextItem', function(e){
+	e.preventDefault();
+	currentTemplate=undefined;
+	$('div.mediumListIconTextItem:not(this)').removeClass('selected');
+	$(this).addClass('selected');
+	currentProject=$(this).children('div').children('h4').text();
+});
+
+function createProject(template)
+{
+	eronide._newtemplate=template
+	$("#inputnewproject").val('');
+	$('#dialog_newproject').modal('show');
+	generateNewProject(eronide._newtemplate);
+}
+</script>

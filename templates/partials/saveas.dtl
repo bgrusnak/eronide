@@ -1,0 +1,80 @@
+<div class="modal hide fade" id="dialog_saveas">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"> </button>
+		<h3>Save as</h3>
+	</div>
+	<div class="modal-body">
+		<form id="saveasform" name="saveasform" class="form-inline" action="#" >
+			<div class="row-fluid" >
+				<div class="span12">
+					<ul class="breadcrumb" id="breadcrumbs">
+					</ul>
+					<form id="saveasform" name="saveasform" class="form-horizontal" action="#" >
+					<div class="row-fluid">
+						<div id="saveas_file_tree" class="span4" style="height:240px; overflow:auto; ">
+							
+						</div>
+						<div class="span8" style="height:200px; overflow:none;  ">
+							<select id="saveas_file_list"  style="height:200px; width:100%" size="10" >
+								
+							</select>
+						</div>
+						<div id="saveas_file_nameedit" class="span8" style="height:40px; overflow:none;  ">
+							<input type="text" id="inputFilename" style="width:100%">
+						</div>
+					</div>
+				
+				</div>
+			</div>
+		</form>
+		<div class="progress progress-indeterminate" id="saveas_progress" >
+			<div class="bar"></div>
+		</div>
+	</div>
+	
+	<div class="modal-footer">
+		<button id="saveas_save_button" class="btn" data-dismiss="modal" aria-hidden="true">Save</button>		
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#saveas_file_tree").dynatree({
+		fx: { height: "toggle", duration: 200 },
+		autoCollapse: true,
+		onClick: function(node, event) {
+			eronide.saveaspath=node.data.key;
+			ws.send($.toJSON({"projects":{"do":"ls", "data":node.data.key}}));
+			$("#saveas_file_tree").dynatree("getTree").activateKey(node.data.key);
+			if (node.data.children.length==0) 
+			{
+				return false;
+			} else 
+			{
+				return true
+			}
+		}
+    });
+	
+	
+	
+	$('#saveas_progress').hide();
+	$('#saveas_file_list').on("change", function(event) {
+		$('#inputFilename').val($('#saveas_file_list').val());
+	});
+	
+	$("#saveas_save_button").on("click", function(event){
+		var newName=eronide.saveaspath+'/'+$("#inputFilename").val();
+		newName=newName.replace(/\/\//gi, "/");
+		for(var i = 0; i < eronide.files.length; i++)
+		{
+			if (eronide.currentfile==eronide.files[i].file)
+			{
+				eronide.files[i].file=eronide.currentfile=newName
+				ws.send($.toJSON({"projects":{"do":"savefile", "data":{"filename":eronide.currentfile, "content":eronide.files[i].editor.getValue()}}}));
+				break;
+			}
+		}	
+	});
+	
+});
+</script>

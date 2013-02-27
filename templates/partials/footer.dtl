@@ -1,0 +1,82 @@
+<footer class="win-commandlayout navbar-fixed-bottom win-ui-light">
+   <div class="container">
+      <div class="row">
+      <div class="span2 align-left">
+      <div class="well"><span class="label">Saved</span> | <span class="label">Working...</span></div>
+      </div>
+         <div class="span5 align-left">
+		      <a class="win-command">
+               <span class="win-commandimage win-commandring">&#x0021;</span>
+               <span class="win-label">Home</span>
+            </a>
+
+            <hr class="win-command" />
+
+            <button class="win-command">
+               <span class="win-commandimage win-commandring">&#xe03e;</span>
+               <span class="win-label">Add</span>
+            </button>
+
+            <button class="win-command">
+               <span class="win-commandimage win-commandring">&#x0052;</span>
+               <span class="win-label">Save</span>
+            </button>
+
+            <button class="win-command">
+               <span class="win-commandimage win-commandring">&#xe125;</span>
+               <span class="win-label">Reload</span>
+            </button>
+
+            <button class="win-command">
+               <span class="win-commandimage win-commandring">&#xe1cd;</span>
+               <span class="win-label">Previous</span>
+            </button>
+
+            <button class="win-command">
+               <span class="win-commandimage win-commandring">&#xe1ca;</span>
+               <span class="win-label">Next</span>
+            </button>
+
+         </div>
+
+         <div class="span5 align-right">
+
+            <button class="win-command">
+               <span class="win-commandimage win-commandring">&#xe202;</span>
+               <span class="win-label">Settings</span>
+            </button>
+
+            <button class="win-command">
+               <span class="win-commandimage win-commandring">&#xE01D;</span>
+               <span class="win-label">Download</span>
+            </button>
+
+            <button class="win-command">
+               <span class="win-commandimage win-commandring">&#xE01F;</span>
+               <span class="win-label">Upload</span>
+            </button>
+
+            <button class="win-command">
+               <span class="win-commandimage win-commandring">&#xE165;</span>
+               <span class="win-label">Send Email</span>
+            </button>
+
+            <button class="win-command">
+               <span class="win-commandimage win-commandring">&#x0067;</span>
+               <span class="win-label">Search</span>
+            </button>
+
+            <button class="win-command">
+               <span class="win-commandimage win-commandring">&#xE001;</span>
+               <span class="win-label">Delete</span>
+            </button>
+
+            <button class="win-command">
+               <span class="win-commandimage win-commandring">&#xE15F;</span>
+               <span class="win-label">User</span>
+            </button>
+
+         </div>
+      </div>
+   </div>
+</footer>

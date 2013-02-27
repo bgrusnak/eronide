@@ -1,0 +1,20 @@
+<ul class="dropdown-menu">
+   <li><a href="/static/metro-layouts.html">Metro Layouts</a></li>
+   <li><a href="/static/hub.html">Hub</a></li>
+   <li><a href="/static/tiles-templates.html">Tile Templates</a></li>
+   <li><a href="/static/listviews.html">ListViews</a></li>
+   <li><a href="/static/appbar-demo.html">App-Bar Demo</a></li>
+   <li><a href="/static/table.html">Table Demo</a></li>
+   <li><a href="/static/wizard.html">Wizard</a></li>
+   <li><a href="/static/icons.html">Icons</a></li>
+   <li><a href="/static/toast.html">Toast Notifications</a></li>
+   <li><a href="/static/pivot.html">Pivot</a></li>
+   <li><a href="/static/metro-components.html">Metro Components</a></li>
+   <li class="divider"></li>
+   <li><a href="/static/scaffolding.html">Bootstrap Scaffolding</a></li>
+   <li><a href="/static/base-css.html">Bootstrap Base CSS</a></li>
+   <li><a href="/static/components.html">Bootstrap Components</a></li>
+   <li><a href="/static/javascript.html">Bootstrap Javascript</a></li>
+   <li class="divider"></li>
+   <li><a href="/">Home</a></li>
+</ul>

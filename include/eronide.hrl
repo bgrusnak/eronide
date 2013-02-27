@@ -1,0 +1,3 @@
+-record(user, {email, password, uuid=undefined, isPersistent=0, restoreHash= <<"">>, maxProjects=10, quote=20971520}).
+-record(rs_state, {user=undefined}).
+-record(filetree, {name, isdir=false, files=[]}).

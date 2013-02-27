@@ -1,0 +1,146 @@
+<div id="modalLogin" class="modal hide fade message">
+<div class="modal-header">
+<h3>Welcome to the ErOnIDE</h3>
+</div>
+<div class="modal-body">
+<div class="tabbable">
+<ul class="nav nav-tabs">
+<li class="active"><a href="#tab1" data-toggle="tab">Sign me in</a></li>
+<li><a href="#tab2" data-toggle="tab">Please, register me</a></li>
+<li><a href="#tab3" data-toggle="tab">I've forgot the password :(</a></li>
+</ul>
+<div class="tab-content">
+<div class="tab-pane active" id="tab1">
+<form id="loginform" name="loginform" class="form-horizontal" action="#" >
+<div class="control-group">
+<label class="control-label" for="inputEmail">Email</label>
+<div class="controls">
+<input type="text" id="inputEmail" placeholder="Email">
+</div>
+</div>
+<div class="control-group">
+<label class="control-label" for="inputPassword">Password</label>
+<div class="controls">
+<input type="password" id="inputPassword" placeholder="Password">
+</div>
+</div>
+<div class="control-group">
+<div class="controls">
+<label class="checkbox">
+<input type="checkbox" id="inputRemember"><span class="metro-checkbox">Remember me</span>
+</label>
+<button type="submit" class="btn">Sign in</button>
+</div>
+</div>
+</form>
+</div>
+<div class="tab-pane" id="tab2">
+<form class="form-horizontal" id="registerform" action="#">
+<div class="control-group">
+<label class="control-label" for="inputEmail">Email</label>
+<div class="controls">
+<input type="text" id="inputEmail" placeholder="Email">
+</div>
+</div>
+<div class="control-group">
+<label class="control-label" for="inputPassword">Password</label>
+<div class="controls">
+<input type="password" id="inputPassword" placeholder="Password">
+</div>
+</div>
+<div class="control-group">
+<label class="control-label" for="inputPassword2">Password again</label>
+<div class="controls">
+<input type="password" id="inputPassword2" placeholder="Password">
+</div>
+</div>
+<div class="control-group">
+<div class="controls">
+<button type="submit" class="btn">Register me</button>
+</div>
+</div>
+</form>
+</div>
+<div class="tab-pane" id="tab3">
+<form class="form-horizontal"  name="restoreform" action="#">
+<div class="control-group">
+<label class="control-label" for="inputEmail">My email</label>
+<div class="controls">
+<input type="text" id="inputEmail" placeholder="Email">
+</div>
+</div>
+<div class="control-group">
+<div class="controls">
+<button type="submit" class="btn">Restore my pasword</button>
+</div>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+<div class="modal-footer">
+ <div class="progress progress-indeterminate" id="load_progress" >
+<div class="bar"></div>
+</div>
+</div>
+</div>
+<!--
+<div id="registerAlert" class="modal warning hide fade bg-color-red" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-body">
+                     <p id="registerAlertText"> </p>
+                  </div>
+                  <div class="modal-footer">
+                     <button class="btn btn-large" data-dismiss="modal">Close</button>
+                  </div>
+               </div> -->
+<script>
+$(document).ready(function(){
+		$('#modalLogin').modal({keyboard: false, backdrop:'static'});
+		$('#load_progress').hide();
+});
+
+$('#loginform').submit(function() {
+
+	if (ws.readyState==1) 
+	{
+		$('#load_progress').show();
+		ws.send(jQuery.toJSON({"login":{"login":$('#loginform #inputEmail').val(), 
+			"password":$('#loginform #inputPassword').val(), 
+			"remember":$('#loginform #inputRemember').val()}}));
+	}
+	return false;
+});
+
+$('#restoreform').submit(function() {
+		alert('Sorry, not created yet');
+		return false;
+});
+
+$('#registerform').submit(function() {
+	if ($('#registerform #inputPassword').val()!=$('#registerform #inputPassword2').val())
+	{
+//		$('#registerAlertText').text('The passwords must be equal.');
+//		$('#registerAlert').modal('show');
+		alert('The passwords must be equal.');
+		return false;
+	}
+	if ($('#registerform #inputEmail').val()=='')
+	{
+		alert('The email must be non-empty.');
+		return false;
+	}
+	if ($('#registerform #inputPassword').val()=='')
+	{
+		alert('The pasword must be non-empty.');
+		return false;
+	}
+	if (ws.readyState==1)
+	{	
+		$('#load_progress').show();
+		ws.send(jQuery.toJSON({"register":{"login":$('#registerform #inputEmail').val(), 
+			"password":$('#registerform #inputPassword').val()}}));
+	}
+	return false;
+});
+</script>

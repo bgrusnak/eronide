@@ -1,0 +1,6 @@
+%% Path to the root of all projects
+{projects, "/home/bgrusnak/projects/eronide/priv/projects"}.
+%% Path to the rebar
+{rebar, "/home/bgrusnak/rebar"}.
+
+

@@ -1,0 +1,6 @@
+<li class="dropdown">
+<a href="#" class="dropdown-toggle" data-toggle="dropdown">Edit<b class="caret"></b></a>
+<ul class="dropdown-menu" role="menu">
+<li><a href="#" id="menu_edit_undo" class="disabled" disabled="disabled">Undo</a></li>
+<li><a href="#" id="menu_edit_redo" class="disabled" disabled="disabled">Redo</a></li>
+</ul></li>

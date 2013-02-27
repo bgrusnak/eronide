@@ -1,0 +1,6 @@
+<ul class="nav">
+{% include "partials/menu/project.dtl" %}
+{% include "partials/menu/file.dtl" %}
+{% include "partials/menu/edit.dtl" %}
+<li><a href="#" id="menu_settings">Settings</a></li>
+</ul>

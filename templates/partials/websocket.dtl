@@ -1,0 +1,308 @@
+<script type="text/javascript">
+function addStatus(text){
+	alert(text);
+}
+var ws;
+$(document).ready(function(){
+	if ("MozWebSocket" in window) {
+		WebSocket = MozWebSocket;
+	}
+	if ("WebSocket" in window) {
+		// browser supports websockets
+		ws = new WebSocket("ws://{{ host }}:{{ port }}/websocket");
+		ws.onopen = function() {
+			// websocket is connected
+//			addStatus("websocket connected!");
+			// send hello data to server.
+//			ws.send($.toJSON({"say":"hello baby!"}));//{name:'foo', text:'baa'}));//
+//			addStatus("sent message to server: 'hello server'!");
+//addStatus(ws.readyState);
+		};
+		ws.onmessage = function (evt) {
+			var received = $.parseJSON(evt.data);
+			if (received.state=="ok")
+			{
+				switch (received.action)
+				{
+					case "login":
+						doLogged(received.data);
+					break;
+					case "register":
+						doRegistered(received.data);
+					break;
+					case "projects":
+						doProjects(received.do, received.data);
+					break;
+					case "breadcrumbs":
+					break;
+				}
+			} else {
+				addStatus(received.data);
+				switch (received.action)
+				{
+					case "login":
+					case "register":
+						$('#load_progress').hide();
+					break;
+				}
+			};
+			
+		};
+		ws.onclose = function() {
+			// websocket was closed
+//			addStatus("websocket was closed");
+		};
+	} else {
+		// browser does not support websockets
+		alert("sorry, your browser does not support websockets.");
+	}
+})
+
+function doLogged(data)
+{
+	$('#load_progress').hide();
+	$('#modalLogin').modal('hide');
+	$('#quickstart').modal('show');
+	ws.send($.toJSON({"projects":{"do":"list", "data":""}}));
+}
+
+function doRegistered(data)
+{
+//	$('#modalLogin').modal('hide');
+	$('#load_progress').hide();
+	alert("You are registered as "+data+"\nPlease, log in.\nConfirmation message was sent to your email.");
+}
+
+function doProjects(doit, data)
+{
+	switch (doit)
+	{
+		case "list":
+			doProjectsList(data)
+		break;
+		case "load":
+			doProjectLoad(data)
+		break;
+		case "loaddirs":
+			doProjectLoadDirs(data)
+		break;
+		case "loadfile":
+			doLoadFile(data)
+		break;
+		case "savefile":
+			doSavedFile(data)
+		break;
+		case "reloadfile":
+			doReloadFile(data)
+		break;
+		case "ls":
+			doCurrentFilesList(data)
+		break;
+	}
+}
+
+eronide = {};  
+eronide.currentfile='';
+eronide.files=[];
+eronide.newfiles=0;
+eronide.windows=0;
+
+function searchCurrent(filename)
+{
+	for(var i = 0; i < eronide.files.length; i++)
+	{
+		if (filename==eronide.files[i].file)
+		{
+			return eronide.files[i]
+			break;
+		}
+	}
+	return undefined
+}
+
+function getCurrentId(filename)
+{
+	var id=-1
+	for(var i = 0; i < eronide.files.length; i++)
+	{
+		if (filename==eronide.files[i].file)
+		{
+			id=i
+			break;
+		}
+	}
+	return id
+}
+
+function removeFromFiles(filename)
+{
+	for(var i = 0; i < eronide.files.length; i++)
+	{
+		if (filename==eronide.files[i].file)
+		{
+			eronide.files.splice(i, 1)
+			break;
+		}
+	}
+	return undefined
+}
+
+function loadFile(filename)
+{
+	var found=searchCurrent(filename);
+	if (found!=undefined) 
+	{
+		$('#'+safeSelector('tab:'+found.window)).tab('show');
+	} else
+	{
+		ws.send($.toJSON({"projects":{"do":"loadfile", "data":filename}}))
+	}
+}
+
+
+function saveCurrentFile()
+{
+	var found=searchCurrent(eronide.currentfile);
+	if (found!=undefined) ws.send($.toJSON({"projects":{"do":"savefile", "data":{"filename":eronide.currentfile, "content":found.editor.getValue()}}}));
+}
+
+function moveFile(oldname, newname)
+{
+	var found=getCurrentId(oldname);
+	if (found>-1) eronide.files[found].file=newname;
+	ws.send($.toJSON({"projects":{"do":"movefile", "data":{"oldname":oldname, "newname":newname}}}));
+}
+
+function fileMustClosed(filename)
+{
+	var found=searchCurrent(filename);
+	$('#'+safeSelector('editor:'+found.window)).remove();
+	$('#'+safeSelector('tab:'+found.window)).remove();
+	$('#'+safeSelector('pane:'+found.window)).remove();
+	removeFromFiles(filename);
+	$("#states_save").attr("disabled",  "disabled");
+	$("#states_save").addClass("disabled");			
+}
+
+function closeFile()
+{
+	var found=searchCurrent(eronide.currentfile);
+	if (found!=undefined) 
+	{
+		var tg=$('#'+safeSelector('tab:'+found.window))[0];
+		var tx=tg.text;
+		var ti=tx.indexOf('*');
+		if (ti>-1) 
+		{
+//			$('#dialog_confirm_close').modal('show');
+			if (confirm("Close unsaved file \""+eronide.currentfile+"\"?")) fileMustClosed(eronide.currentfile)
+		} else
+		{
+			fileMustClosed(eronide.currentfile)
+		}
+	}
+}
+
+function copyFile(oldname, newname)
+{
+	ws.send($.toJSON({"projects":{"do":"copyfile", "data":{"oldname":oldname, "newname":newname}}}));
+}
+
+function deleteFile(filename)
+{
+	ws.send($.toJSON({"projects":{"do":"deletefile", "data":filename}}));
+}
+
+function saveFileAs()
+{
+	$('#saveas_progress').show();
+	ws.send($.toJSON({"projects":{"do":"loaddirs", "data":eronide.project}}));
+	$("#inputFilename").val('');
+	eronide.saveaspath=eronide.project+'/'
+	$('#dialog_saveas').modal('show');
+}
+
+function doSavedFile(filename)
+{
+	var found=searchCurrent(filename)
+	var tg=$('#'+safeSelector('tab:'+found.window))[0];
+	var tx=tg.text;
+	var ti=tx.indexOf('*');
+	if (ti>-1) tg.text=tx.slice(0, -2);
+}
+
+function reloadFile()
+{
+	ws.send($.toJSON({"projects":{"do":"reloadfile", "data":eronide.currentfile}}))
+}
+
+function doReloadFile(data)
+{
+	var found=searchCurrent(eronide.currentfile);
+	if (found!=undefined) 
+	{
+		found.editor.setValue(data.content)
+		var tg=$('#'+safeSelector('tab:'+found.window))[0];
+		var tx=tg.text;
+		var ti=tx.indexOf('*');
+		if (ti>-1) tg.text=tx.slice(0, -2);
+	}
+}
+
+function doLoadFile(data)
+{
+//	var filetab=data.filename;//.replace(/[\//gi,'^').replace(/\./gi,'-');
+	eronide.windows++
+	tabAdd('#filesbox', data.filename, '<form><textarea id="editor:'+eronide.windows+'" style="border:1px solid silver">'+data.content+'</textarea></form>', true);
+//alert('mime type is '+data.mimetype+"\ntheme is "+theme);
+	eronide.files.push({file:data.filename, editor:makeCodemirror($('#'+safeSelector('editor:'+eronide.windows))[0], data.mimetype), newfile:false, window:eronide.windows});
+}
+
+function newFile()
+{
+	eronide.newfiles++;
+	eronide.windows++;
+	var filename='unnamed'+eronide.newfiles;
+	tabAdd('#filesbox', filename, '<form><textarea id="editor:'+eronide.windows+'" style="border:1px solid silver"></textarea></form>', true);
+	eronide.files.push({file:filename, editor:makeCodemirror($('#'+safeSelector('editor:'+eronide.windows))[0], ""), newfile:true, window:eronide.windows});
+	$("#states_save").attr("disabled",  "disabled");
+	$("#states_save").addClass("disabled");	
+}
+
+function doProjectLoad(data)
+{
+//      $("#project_tree").dynatree("getRoot").addChild(data.children);
+	eronide.project=data.project
+    $("#project_tree").dynatree("getRoot").fromDict({title:"./", key:"./", expand:true, isFolder:true, children:data.tree}); 
+}
+
+function doProjectLoadDirs(data)
+{
+	$('#saveas_progress').hide();
+	eronide.project=data.project
+    $("#saveas_file_tree").dynatree("getRoot").fromDict({title:"./", key:"./", isFolder:true, expand:true,  children:data.tree}); 
+}
+
+function doCurrentFilesList(data)
+{
+//alert(data);
+	var oldfilename=$('#inputFilename').val();
+	$('#saveas_file_list').empty();
+	for (var i=0; i<data.length; i++)
+	{
+		$('<option>'+data[i]+'</option>').appendTo('#saveas_file_list');
+	}
+	$('#inputFilename').val(oldfilename);
+}
+
+function doProjectsList(data)
+{
+//alert(data);
+	$('#quickstart_my_projects').empty();
+	for (var i=0; i<data.length; i++)
+	{
+		$('<div class="mediumListIconTextItem"><img src="/static/ptemplates/'+data[i].project.icon+'" class="mediumListIconTextItem-Image" /><div class="mediumListIconTextItem-Detail"><h4>'+data[i].project.name+'</h4><h6>'+data[i].project.description+'</h6></div></div>').appendTo('#quickstart_my_projects');
+	}
+}
+
+</script>

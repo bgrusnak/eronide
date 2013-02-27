@@ -1,0 +1,59 @@
+<!--  <script src="/static/scripts/codemirror-compressed.js" type="text/javascript"></script> -->
+<link rel="stylesheet" href="/static/codemirror/lib/codemirror.css">
+<script src="/static/codemirror/lib/codemirror.js"></script>
+<script src="/static/codemirror/lib/util/matchbrackets.js"></script>
+<script src="/static/codemirror/mode/javascript/javascript.js"></script>
+<script src="/static/codemirror/mode/css/css.js"></script>
+<script src="/static/codemirror/mode/erlang/erlang.js"></script>
+<script src="/static/codemirror/mode/htmlmixed/htmlmixed.js"></script>
+<script src="/static/codemirror/mode/mysql/mysql.js"></script>
+<script src="/static/codemirror/lib/util/dialog.js"></script>
+<script src="/static/codemirror/lib/util/searchcursor.js"></script>
+<script src="/static/codemirror/lib/util/search.js"></script>
+<link rel="stylesheet" href="/static/codemirror/theme/eclipse.css">
+<link rel="stylesheet" href="/static/codemirror/theme/erlang-dark.css">
+<link rel="stylesheet" href="/static/codemirror/lib/util/dialog.css">
+<style type="text/css">
+      .cm-tab {
+         background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAMCAYAAAAkuj5RAAAAAXNSR0IArs4c6QAAAGFJREFUSMft1LsRQFAQheHPowAKoACx3IgEKtaEHujDjORSgWTH/ZOdnZOcM/sgk/kFFWY0qV8foQwS4MKBCS3qR6ixBJvElOobYAtivseIE120FaowJPN75GMu8j/LfMwNjh4HUpwg4LUAAAAASUVORK5CYII=);
+         background-position: right;
+         background-repeat: no-repeat;
+      }
+      .activeline {background: #e8f2ff !important;}
+    </style>
+<script type="text/javascript">
+	function getCodemirrorTheme(mime)
+	{	
+		if ("text/x-erlang"==mime) return "erlang-dark";
+
+		switch(mime)
+		{
+			case "text/x-erlang":
+				return "erlang-dark";
+			break;
+			default:
+				return "eclipse";
+			break;
+		}
+	}
+	
+	function makeCodemirror(target, mimetype)
+	{
+		var theme=getCodemirrorTheme(mimetype);
+		currentEditor = CodeMirror.fromTextArea(target, {
+			mode:mimetype, 
+			autofocus:true, 
+			lineNumbers: true,
+			matchBrackets: true,
+//			theme: theme,
+			extraKeys: {"Tab":  "indentAuto"}
+		});
+		currentEditor.on('change', function (cm) {
+			var found=searchCurrent(eronide.currentfile);
+			var tg=$('#'+safeSelector('tab:'+found.window))[0];
+			var tx=tg.text;
+			if (tx.indexOf('*')==-1) tg.text=tx+" *";
+		})
+		return currentEditor
+	}
+</script>

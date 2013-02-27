@@ -1,0 +1,8 @@
+TODO
+
+1. Fix erl mimetype
+2. Add wait bar for websocket
+3. fix mimetypes for the static header
+4. Fix correct mimetypes in getCodemirrorTheme
+5. Fix active new tab in filetabs
+l

@@ -1,0 +1,43 @@
+<div class="modal hide fade" id="dialog_rename">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"> </button>
+		<h3>Rename file <span id="rename_oldfilename"></span></h3>
+	</div>
+	<div class="modal-body">
+		<form id="renameform" name="renameform" class="form-horizontal" action="#" >
+			<div class="control-group">
+				<label class="control-label" for="inputRename">New file name</label>
+				<div class="controls">
+					<input type="text" id="inputRename" >
+				</div>
+			</div>
+			
+		</form>
+	</div>
+	
+	<div class="modal-footer">
+		<button id="rename_button" class="btn" data-dismiss="modal" aria-hidden="true">Rename</button>		
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	
+
+	
+	$("#rename_button").on("click", function(event){
+		var newName= $("#inputRename").val();
+		if (newName=="") return;
+		
+		eronide._oldname=eronide.sourceNode.data.key
+		eronide.sourceNode.setTitle(newName)
+		eronide.sourceNode.data.key=eronide.sourceNode.getParent().data.key+'/'+newName
+		if (eronide.sourceNode.data.isFolder) eronide.sourceNode.visit(function(node){
+			node.data.key=eronide.sourceNode.data.key+'/'+node.data.key.substring(node.data.key.indexOf(eronide._oldname)+eronide._oldname.length+1)
+alert(node.data.key)			
+		  });
+		
+		moveFile(eronide._oldname, eronide.sourceNode.data.key)
+	});
+	
+});
+</script>

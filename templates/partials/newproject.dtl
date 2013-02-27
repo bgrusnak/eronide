@@ -1,0 +1,64 @@
+<div class="modal hide fade" id="dialog_newproject">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-hidden="true"> </button>
+		<h3>New project</h3>
+	</div>
+	<div class="modal-body">
+		<form id="newprojectform" name="newprojectform" class="form-horizontal" action="#" >
+		{% comment %}
+		{% for element in newprojectelements %}
+			<div class="control-group">
+				<label class="control-label" for="input_new_{{element.name}}">{{element.caption}}</label>
+				<div class="controls">
+					<input type="text" id="input_new_{{element.name}}" required="required" >
+				</div>
+			</div>
+		{% endfor %}			
+		{% endcomment %}
+		</form>
+	</div>
+	
+	<div class="modal-footer">
+		<button id="newproject_button" class="btn" data-dismiss="modal" aria-hidden="true">Create a project</button>		
+	</div>
+</div>
+<script type="text/javascript">
+templates=[]
+{% for ptemplate in ptemplates %}
+templates["{{ptemplate.name}}"]=[
+	{% for row in ptemplate.fields %}{% if not forloop.first %},
+{% endif %} {
+	{% for key, value in row %} {% if not forloop.first %},
+{% endif %}{{key}}: "{{value}}"{% endfor %} }
+	{% endfor %}
+];
+{% endfor %}
+function generateNewProject(name)
+{
+	$('#newprojectform').empty();
+	var curr=templates[name];
+	for (var i=0; i<curr.length; i++) 
+	{
+		$('<div class="control-group"><label class="control-label" for="input_new_'+curr[i].name+'">'+curr[i].caption+'</label><div class="controls"><input type="text" id="input_new_'+curr[i].name+'" required="required" ></div></div>').appendTo('#newprojectform');
+	}	
+}
+	
+function collectNewProjectData(name)
+{
+	var ret={"template":name}
+	var curr=templates[name];
+	for (var i=0; i<curr.length; i++) 
+	{
+		ret[curr[i].name]=$("#input_new_"+curr[i].name).val();
+	}
+	return ret
+}
+
+$(document).ready(function(){
+	
+	$("#newproject_button").on("click", function(event){
+		ws.send($.toJSON({"projects":{"do":"create", "data": collectNewProjectData(eronide._newtemplate)}}));
+	});
+	
+});
+</script>
